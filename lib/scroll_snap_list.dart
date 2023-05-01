@@ -123,6 +123,8 @@ class ScrollSnapList extends StatefulWidget {
 
   final Alignment? itemAlignment;
 
+  final Duration? opacityDuration;
+
   final EdgeInsetsGeometry? listViewPadding;
 
   ScrollSnapList({
@@ -156,8 +158,9 @@ class ScrollSnapList extends StatefulWidget {
     this.clipBehavior = Clip.hardEdge,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.dispatchScrollNotifications = false,
-    this.listViewPadding,
     this.itemAlignment,
+    this.opacityDuration,
+    this.listViewPadding,
   })  : listController = listController ?? ScrollController(),
         super(key: key);
 
@@ -248,7 +251,10 @@ class ScrollSnapListState extends State<ScrollSnapList> {
     }
 
     if (widget.dynamicItemOpacity != null) {
-      child = Opacity(child: child, opacity: calculateOpacity(index));
+      child = AnimatedOpacity(
+          child: child,
+          duration: widget.opacityDuration ?? Duration.zero,
+          opacity: calculateOpacity(index));
     }
 
     if (widget.focusOnItemTap)
