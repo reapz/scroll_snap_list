@@ -121,41 +121,44 @@ class ScrollSnapList extends StatefulWidget {
   ///dispatch notifications to further ancestors.
   final bool dispatchScrollNotifications;
 
+  final Alignment? itemAlignment;
+
   final EdgeInsetsGeometry? listViewPadding;
 
-  ScrollSnapList(
-      {this.background,
-      required this.itemBuilder,
-      ScrollController? listController,
-      this.curve = Curves.ease,
-      this.allowAnotherDirection = true,
-      this.duration = 500,
-      this.endOfListTolerance,
-      this.focusOnItemTap = true,
-      this.focusToItem,
-      required this.itemCount,
-      required this.itemSize,
-      this.key,
-      this.listViewKey,
-      this.margin,
-      required this.onItemFocus,
-      this.onReachEnd,
-      this.padding,
-      this.reverse = false,
-      this.updateOnScroll,
-      this.initialIndex,
-      this.scrollDirection = Axis.horizontal,
-      this.dynamicItemSize = false,
-      this.dynamicSizeEquation,
-      this.dynamicItemOpacity,
-      this.selectedItemAnchor = SelectedItemAnchor.MIDDLE,
-      this.shrinkWrap = false,
-      this.scrollPhysics,
-      this.clipBehavior = Clip.hardEdge,
-      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-      this.dispatchScrollNotifications = false,
-      this.listViewPadding})
-      : listController = listController ?? ScrollController(),
+  ScrollSnapList({
+    this.background,
+    required this.itemBuilder,
+    ScrollController? listController,
+    this.curve = Curves.ease,
+    this.allowAnotherDirection = true,
+    this.duration = 500,
+    this.endOfListTolerance,
+    this.focusOnItemTap = true,
+    this.focusToItem,
+    required this.itemCount,
+    required this.itemSize,
+    this.key,
+    this.listViewKey,
+    this.margin,
+    required this.onItemFocus,
+    this.onReachEnd,
+    this.padding,
+    this.reverse = false,
+    this.updateOnScroll,
+    this.initialIndex,
+    this.scrollDirection = Axis.horizontal,
+    this.dynamicItemSize = false,
+    this.dynamicSizeEquation,
+    this.dynamicItemOpacity,
+    this.selectedItemAnchor = SelectedItemAnchor.MIDDLE,
+    this.shrinkWrap = false,
+    this.scrollPhysics,
+    this.clipBehavior = Clip.hardEdge,
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.dispatchScrollNotifications = false,
+    this.listViewPadding,
+    this.itemAlignment,
+  })  : listController = listController ?? ScrollController(),
         super(key: key);
 
   @override
@@ -232,9 +235,13 @@ class ScrollSnapListState extends State<ScrollSnapList> {
   Widget _buildListItem(BuildContext context, int index) {
     Widget child;
     if (widget.dynamicItemSize) {
-      child = Transform.scale(
-        scale: calculateScale(index),
-        child: widget.itemBuilder(context, index),
+      child = Container(
+        height: widget.itemSize,
+        child: Transform.scale(
+          alignment: widget.itemAlignment ?? Alignment.center,
+          scale: calculateScale(index),
+          child: widget.itemBuilder(context, index),
+        ),
       );
     } else {
       child = widget.itemBuilder(context, index);
